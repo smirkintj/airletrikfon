@@ -1,0 +1,190 @@
+INVOIS
+BIL AIR
+7000000001 79.05
+AHMAD BIN CONTOH
+NO 1 JALAN CONTOH 1/1 TAMAN CONTOH
+SEKSYEN 1 SHAH ALAM
+40000 SHAH ALAM
+SELANGOR
+RINGKASAN BIL
+Baki Terdahulu RM 31.20
+Bayaran Sehingga Kini RM 0.00
+Baki Belum Dijelaskan RM 31.20
+Bil Semasa (Bayar Sebelum 11/09/2026) RM 47.85
+Jumlah Perlu Dibayar RM 79.05
+BUTIRAN BIL
+Meter No Tarikh Tempoh Bacaan
+(Hari)
+Bacaan Jenis Bacaan Penggunaan
+(m3)
+AIS00XX0000001 12/08/2026 30 2,540 N 38
+13/07/2026 2,502 N
+Jumlah penggunaan yang dibilkan 38
+Keterangan Amaun (RM)
+Caj Penggunaan - Domestik 47.83
+Caj bagi 20.00 m3 pada RM0.65 per m3 13.00
+Caj bagi 15.00 m3 pada RM1.62 per m3 24.30
+Caj bagi 3.00 m3 pada RM3.51 per m3 10.53
+Pelarasan 0.00
+Baki Belum Dijelaskan 31.20
+Penggenapan 0.02
+Jumlah Perlu Dibayar 79.05
+No. Akaun : 7000000001 (Baharu)
+3000000000001 (Lama)
+No. Invois : 200000001
+No. Meter : AIS00XX0000001
+Cagaran : RM 100.00
+Kategori : Domestik
+Wilayah : Klang
+Tarikh : 12/08/2026
+Biller Code: 4200
+Ref-1: 7000000001
+JomPay online di Perbankan Internet dan Telefon Mudah Alih
+dengan akaun semasa, simpanan atau kad kredit
+ALAMAT PREMIS:
+NO 1 JALAN CONTOH 1/1 TAMAN
+CONTOH SEKSYEN 1 SHAH ALAM
+40000 SHAH ALAM
+SELANGOR
+Hubungi kami untuk sebarang pertanyaan atau
+maklumat di saluran komunikasi rasmi kami:
+Media Sosial Air Selangor
+Hubungi 15300
+Muat Turun Aplikasi Air Selangor
+Pengurusan Air Selangor Sdn. Bhd. (201401006213)
+A Member of Air Selangor Holdings Berhad Group
+Head Office, Jalan Pantai Baharu, 59200 Kuala Lumpur
+www.airselangor.com 15300
+Gunalah Air Secara Berhemah, Gunalah Produk Cekap Air
+Bil semasa perlu dijelaskan dalam masa tiga puluh (30) hari dari tarikh bil dan tunggakan perlu dijelaskan
+dalam tempoh empat belas (14) hari dari tarikh notis pemotongan bekalan air.
+Pengguna domestik yang tidak mendaftar e-Bil akan menerima bil air 2 bulan sekali melalui pos.
+Pembayaran bil boleh dilakukan menerusi platform berikut:
+Perbankan Internet melalui
+JomPay dan FPX
+e-Wallet seperti Touch 'n
+Go, GrabPay, Boost, Shopee,
+Lazada dan Big Pay
+Imbas kod QR dan bayar
+Kaunter Khidmat Pelanggan di Pejabat Wilayah
+Pengurusan Air Selangor Sdn. Bhd.
+Mesin kiosk terpilih
+Media Sosial Air Selangor
+Hubungi 15300
+Muat turun Aplikasi Air Selangor
+Ke Arah Mencapai Kelestarian Bekalan Air
+Demi Kesejahteraan Pengguna
+Di Air Selangor, kami membangunkan loji rawatan
+air (LRA) baharu bagi meningkatkan margin rizab air
+kepada 20% pada 2030
+seperti LRA Sungai Rasau (Peringkat 1 dan 2), LRA
+Labohan Dagang Fasa 2 dan LRA Penyahgaraman
+Pulau Ketam.
+Kami juga menggandakan Program Penggantian Paip
+daripada 150km setahun kepada 300km setahun bermula 2024, dan
+kemudiannya 400km setahun bermula 2034.
+Program Penggantian Paip
+akan menurunkan kadar
+Air Tidak Terhasil
+(NRW)
+secara konsisten kepada
+Maklumat setakat pada Disember 2024
+Kategori Domestik
+Kategori Jumlah
+Penggunaan
+Tarif Dahulu
+Kategori Jumlah
+Penggunaan
+Berkuat Kuasa
+1 September 2025
+Kadar
+(RM/m³)
+Caj
+Minimum
+(RM)
+Kadar
+(RM/m³)
+Caj
+Minimum
+(RM)
+Domestik
+0 m³ hingga 20 m³ 0.65
+6.50 Domestik
+0 m³ hingga 20
+m³ 0.65
+6.50Melebihi 20 m³
+hingga 35 m³ 1.32 Melebihi 20 m³
+hingga 35 m³ 1.62
+Melebihi 35 m³ 2.63 Melebihi 35 m³ 3.51
+Domestik Pukal
+(Kondominium) Kadar Rata 1.68 173.00 Domestik Pukal
+(Kondominium) Kadar Rata 2.09 173.00
+Domestik Pukal
+(Estet/Kuarters Kerajaan) Kadar Rata 1.68 16.80 Domestik Pukal
+(Estet/Kuarters Kerajaan) Kadar Rata 2.09 20.90
+Domestik Pukal
+(Pangsapuri Kos Rendah) Kadar Rata 0.98 35.00 Domestik Pukal
+(Pangsapuri Kos Rendah) Kadar Rata 1.18 35.00
+Kategori Bukan Domestik dan Kategori Khas
+Kategori Jumlah
+Penggunaan
+Tarif Dahulu
+Kategori Jumlah
+Penggunaan
+Berkuat Kuasa
+1 September 2025
+Kadar
+(RM/m³)
+Caj Minimum
+(RM)
+Kadar
+(RM/m³)
+Caj
+Minimum
+(RM)
+Bukan Domestik 0 m³ hingga 35 m³ 2.70 36.00 Bukan Domestik
+0 m³ hingga 35
+m³ 3.51 36.00
+Melebihi 35 m³ 2.94 Melebihi 35 m³ 3.83
+Institusi Keagamaan/
+Kebajikan Kadar Rata 0.66 6.60 Institusi Keagamaan/
+Kebajikan Kadar Rata 0.76 7.60
+Perkapalan Kadar Rata 7.08 70.80 Perkapalan Kadar Rata 8.01 80.10
+Pusat Data Pusat Data Kadar Rata 5.31 53.10
+PENERANGAN
+Bil semasa perlu dijelaskan dalam
+masa tiga puluh (30) hari dari tarikh
+penyerahan bil dan tunggakan perlu
+dijelaskan dalam tempoh empat
+belas (14) hari dari tarikh notis
+pemotongan bekalan air.
+Caj pemotongan dan penyambungan
+semula sebanyak RM70 akan
+dikenakan sekiranya bekalan air
+dipotong.
+Kajian semula deposit akaun bil air
+berdasarkan purata bil air bulanan
+pengguna dilakukan mengikut Akta
+Industri Perkhidmatan Air 2006 (Akta
+655) seperti berikut:
+Bukan Domestik (Industri)
+pada 31 Januari dan 31 Julai
+Domestik pada 31 Januari
+Sekiranya deposit sedia ada kurang
+daripada nilai deposit baharu,
+pengguna perlu membayar tambahan
+deposit bersama bil air bulanan
+semasa. Jika deposit sedia ada
+melebihi nilai baharu bayaran
+tambahan tidak perlu dibuat.
+JENIS BACAAN
+Kod Jenis Bacaan
+N Normal
+E Anggaran
+www.airselangor.com
+www.airselangor.com 15300
+Gunalah Air Secara Berhemah, Gunalah Produk Cekap Air
+Bayaran secara dalam talian
+Lain-lain cara bayaran
+Hubungi kami untuk sebarang pertanyaan atau
+maklumat di saluran komunikasi rasmi kami:
