@@ -27,7 +27,7 @@ export async function POST(request: Request) {
     if (e instanceof Unauthorized) return error("Please sign in again.", 401);
     if (e instanceof NeedsApiKey || e instanceof ExtractionRefused) return error(e.message, 422);
     console.error(e);
-    return error(e instanceof Error && e.message.startsWith("TNB parser") ? e.message : "Couldn't read that bill.", 500);
+    return error(e instanceof Error && / parser: /.test(e.message) ? e.message : "Couldn't read that bill.", 500);
   }
 }
 

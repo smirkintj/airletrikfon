@@ -63,10 +63,11 @@ export function Findings({ insights }: { insights: Insight[] }) {
 
 /** Horizontal meter: this bill's usage against the tariff line. */
 export function Gauge({ value, line, unit }: { value: number; line: number; unit: string }) {
-  const max = Math.max(Math.ceil((Math.max(value, line) * 1.25) / 100) * 100, 100);
+  const step = Math.max(value, line) <= 80 ? 10 : 100;
+  const max = Math.max(Math.ceil((Math.max(value, line) * 1.25) / step) * step, step);
   const pct = (v: number) => `${(v / max) * 100}%`;
   const under = Math.min(value, line);
-  const ticks = Array.from({ length: max / 100 + 1 }, (_, i) => i * 100);
+  const ticks = Array.from({ length: max / step + 1 }, (_, i) => i * step);
   return (
     <div role="img" aria-label={`${value} ${unit} against a ${line} ${unit} line`}>
       <div className="relative h-5 border border-line bg-panel-2">
@@ -74,11 +75,16 @@ export function Gauge({ value, line, unit }: { value: number; line: number; unit
         {value > line && <div className="hatch absolute inset-y-0" style={{ left: pct(line), width: pct(value - line) }} />}
         <div className="absolute -inset-y-1.5 w-px bg-ink" style={{ left: pct(line) }} />
       </div>
+      <p className="num relative h-0 text-[10px] text-ink">
+        <span className="absolute -top-8 -translate-x-1/2 bg-panel px-0.5" style={{ left: pct(line) }}>
+          {line}
+        </span>
+      </p>
       <div className="relative mt-1 h-4">
         {ticks.map((t) => (
           <span
             key={t}
-            className={`num absolute -translate-x-1/2 text-[10px] ${t === line ? "text-ink" : "text-muted"} ${t % 200 && max > 1000 ? "hidden sm:inline" : ""}`}
+            className={`num absolute -translate-x-1/2 text-[10px] text-muted ${t % (step * 2) && max / step > 10 ? "hidden sm:inline" : ""}`}
             style={{ left: pct(t) }}
           >
             {t}

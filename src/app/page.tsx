@@ -55,7 +55,8 @@ export default async function Overview() {
 function AccountPanel({ account: a }: { account: Account }) {
   const b = a.bills[a.bills.length - 1];
   const unit = b.usage?.unit;
-  const line = a.provider === "tnb" ? TNB.protectionKwh : undefined;
+  // The line that matters: TNB's 600 kWh cliff, Air Selangor's top-rate tier.
+  const line = a.provider === "tnb" ? TNB.protectionKwh : a.provider === "air_selangor" ? 35 : undefined;
   return (
     <Panel
       title={
@@ -74,7 +75,9 @@ function AccountPanel({ account: a }: { account: Account }) {
 
       {b.usage && line && (
         <div className="mt-6">
-          <p className="label mb-2">This bill vs the {line} kWh line</p>
+          <p className="label mb-2">
+            This bill vs the {line} {b.usage.unit} line
+          </p>
           <Gauge value={b.usage.value} line={line} unit={b.usage.unit} />
         </div>
       )}

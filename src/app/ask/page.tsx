@@ -95,7 +95,7 @@ export default function AskPage() {
             </p>
             <div className="px-4 py-3">
               {t.a ? (
-                <p className="whitespace-pre-wrap">{t.a}</p>
+                <Answer text={t.a} />
               ) : t.error ? (
                 <p className="text-sm text-red">{t.error}</p>
               ) : (
@@ -107,6 +107,41 @@ export default function AskPage() {
           </li>
         ))}
       </ol>
+    </div>
+  );
+}
+
+/** Paragraphs, plus runs of "- " lines rendered as lists. Plain text only; nothing is parsed as HTML. */
+function Answer({ text }: { text: string }) {
+  const bullet = /^\s*[-•]\s+/;
+  const groups: { list: boolean; lines: string[] }[] = [];
+  for (const line of text.trim().split("\n")) {
+    const list = bullet.test(line);
+    const last = groups[groups.length - 1];
+    if (!line.trim()) groups.push({ list: false, lines: [] });
+    else if (last && last.list === list && (list || last.lines.length)) last.lines.push(line.replace(bullet, ""));
+    else groups.push({ list, lines: [line.replace(bullet, "")] });
+  }
+  return (
+    <div className="space-y-3">
+      {groups
+        .filter((g) => g.lines.length)
+        .map((g, i) =>
+          g.list ? (
+            <ul key={i} className="space-y-1.5">
+              {g.lines.map((l, j) => (
+                <li key={j} className="flex gap-2">
+                  <span className="num text-amber-ink">›</span>
+                  <span>{l}</span>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p key={i} className="whitespace-pre-wrap">
+              {g.lines.join("\n")}
+            </p>
+          ),
+        )}
     </div>
   );
 }

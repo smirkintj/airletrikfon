@@ -9,7 +9,7 @@ const ITEMS = [
   { href: "/ask", label: "Ask", key: "03" },
 ];
 
-export function Nav() {
+export function Nav({ signOut = false }: { signOut?: boolean }) {
   const path = usePathname();
   const active = (href: string) => (href === "/" ? path === "/" || path.startsWith("/bills") : path.startsWith(href));
 
@@ -34,7 +34,13 @@ export function Nav() {
                 <span className="text-amber-ink/70">{i.key}</span> {i.label}
               </Link>
             ))}
+            {signOut && <SignOut />}
           </nav>
+          {signOut && (
+            <div className="md:hidden">
+              <SignOut />
+            </div>
+          )}
         </div>
       </header>
 
@@ -60,5 +66,13 @@ export function Nav() {
         </div>
       </nav>
     </>
+  );
+}
+
+function SignOut() {
+  return (
+    <form action="/logout" method="post">
+      <button className="num rounded px-3 py-1.5 text-xs tracking-wider text-muted uppercase hover:text-ink">Sign out</button>
+    </form>
   );
 }

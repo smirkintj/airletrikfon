@@ -1,3 +1,4 @@
+import { computeWaterBill, tierCrossed } from "../tariffs/air-selangor";
 import { computeTnbBill, protectionThreshold, rm, TNB } from "../tariffs/tnb";
 import { fmtDate } from "../format";
 import { PROVIDERS, type Bill, type Insight } from "../types";
@@ -50,6 +51,7 @@ export function insightsFor(account: Account, today = new Date().toISOString().s
 
   out.push(...paymentInsights(latest, today));
   if (latest.provider === "tnb") out.push(...tnbInsights(latest, account.series));
+  if (latest.provider === "air_selangor") out.push(...waterInsights(latest));
   out.push(...trendInsights(latest, account.series));
   return out;
 }
@@ -136,6 +138,40 @@ function tnbInsights(b: Bill, series: SeriesPoint[]): Insight[] {
       severity: "warn",
       title: `${1500 - kwh} kWh away from the 1,500 kWh price jump`,
       detail: "Above 1,500 kWh, every unit is charged at 37.03 sen instead of 27.03 sen for energy.",
+    });
+  }
+  return out;
+}
+
+function waterInsights(b: Bill): Insight[] {
+  const out: Insight[] = [];
+  const m3 = b.usage?.value;
+  if (m3 == null) return out;
+  const days = periodDays(b);
+  const litresPerDay = days ? Math.round((m3 * 1000) / days) : null;
+
+  const crossed = tierCrossed(m3);
+  if (crossed) {
+    const over = rm(m3 - crossed.boundary);
+    const cost = rm(computeWaterBill(m3).total - computeWaterBill(crossed.boundary).total);
+    out.push({
+      id: `${b.id}:water-tier`,
+      billId: b.id,
+      severity: over <= 5 ? "warn" : "info",
+      title: `The last ${over} m³ above ${crossed.boundary} m³ cost ${fmt(cost)}`,
+      detail:
+        `Water above ${crossed.boundary} m³ is charged at RM${crossed.rate.toFixed(2)}/m³, ${(crossed.rate / crossed.firstRate).toFixed(1)}× the first-tier rate. ` +
+        (days && litresPerDay
+          ? `You used about ${litresPerDay.toLocaleString("en-MY")} litres a day; about ${Math.round((over * 1000) / days)} litres a day less would have kept you at ${crossed.boundary} m³.`
+          : ""),
+    });
+  } else if (litresPerDay) {
+    out.push({
+      id: `${b.id}:water-ok`,
+      billId: b.id,
+      severity: "good",
+      title: `Water stayed in the cheapest tier (${m3} m³)`,
+      detail: `About ${litresPerDay.toLocaleString("en-MY")} litres a day, all at RM0.65/m³.`,
     });
   }
   return out;

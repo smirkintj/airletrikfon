@@ -21,6 +21,7 @@ export async function supabaseServer() {
   });
 }
 
+/** Only these addresses may use the app, even if other Supabase users exist. */
 export function isAllowedEmail(email: string | undefined | null) {
   const allowed = process.env.ALLOWED_EMAIL?.toLowerCase().split(",").map((e) => e.trim());
   return Boolean(email && allowed?.includes(email.toLowerCase()));

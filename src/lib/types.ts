@@ -73,7 +73,7 @@ export type LineItem = z.infer<typeof LineItemSchema>;
 export type Bill = ExtractedBill & {
   id: string;
   createdAt: string;
-  extractedBy: "claude" | "tnb-text-parser";
+  extractedBy: "claude" | "text-parser" | "tnb-text-parser"; // tnb-text-parser: older records
   pdfPath: string | null;
 };
 

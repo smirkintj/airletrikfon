@@ -62,7 +62,7 @@ export function UsageChart({ data, unit, threshold }: { data: Point[]; unit: str
           {threshold && (
             <div className="absolute inset-x-0 z-10 border-t border-ink/70" style={{ bottom: h(threshold) }} aria-hidden />
           )}
-          <div className="absolute inset-0 flex items-end gap-[6%] px-[3%]">
+          <div className="absolute inset-0 flex items-end justify-around gap-[4%] px-[3%]">
             {rows.map((r, i) => {
               const under = threshold ? Math.min(r.usage, threshold) : r.usage;
               const over = threshold && r.usage > threshold ? r.usage - threshold : 0;
@@ -91,7 +91,7 @@ export function UsageChart({ data, unit, threshold }: { data: Point[]; unit: str
           </div>
         </div>
       </div>
-      <div className="ml-10 flex gap-[6%] px-[3%] pt-1.5">
+      <div className="ml-10 flex justify-around gap-[4%] px-[3%] pt-1.5">
         {rows.map((r, i) => (
           <span key={r.month} className={`num max-w-12 flex-1 text-center text-[10px] ${i === sel ? "text-ink" : "text-muted"}`}>
             {monthLabel(r.month).split(" ")[0]}
@@ -141,7 +141,7 @@ export function SpendChart({ data }: { data: SpendRow[] }) {
           </span>
         ))}
       </figcaption>
-      <div className="relative flex h-40 items-end gap-[6%] border-b border-line-2 px-[3%] sm:h-48">
+      <div className="relative flex h-40 items-end justify-around gap-[4%] border-b border-line-2 px-[3%] sm:h-48">
         {data.map((d, i) => (
           <button
             key={d.month}
@@ -165,7 +165,7 @@ export function SpendChart({ data }: { data: SpendRow[] }) {
           </button>
         ))}
       </div>
-      <div className="flex gap-[6%] px-[3%] pt-1.5">
+      <div className="flex justify-around gap-[4%] px-[3%] pt-1.5">
         {data.map((d, i) => (
           <span key={d.month} className={`num max-w-12 flex-1 text-center text-[10px] ${i === sel ? "text-ink" : "text-muted"}`}>
             {monthLabel(d.month).split(" ")[0]}

@@ -46,7 +46,7 @@ describe("parseTnbText", () => {
   });
 
   it("produces the expected insights", () => {
-    const full: Bill = { ...bill, id: "b1", createdAt: "", extractedBy: "tnb-text-parser", pdfPath: null };
+    const full: Bill = { ...bill, id: "b1", createdAt: "", extractedBy: "text-parser", pdfPath: null };
     const insights = insightsFor({ key: "k", provider: "tnb", accountNo: full.accountNo, bills: [full], series: buildSeries([full]) }, "2026-08-20");
     const titles = insights.map((i) => i.title);
     expect(titles[0]).toMatch(/disconnection notice/);

@@ -14,10 +14,10 @@ PDF ──► extract ──────────────► bill JSON �
                                               calling the TNB tariff calculator for what-ifs
 ```
 
-- **Extraction** (`src/lib/extract/`): Claude reads the PDF into a fixed schema (`src/lib/types.ts`). Without an API key, a rule-based parser handles TNB bills only. Names and addresses are never extracted.
-- **Tariff engine** (`src/lib/tariffs/tnb.ts`): the TNB domestic tariff from July 2025, including EEI bands, AFA proration, SST above 600 kWh and KWTBB. It reproduces a real bill to the sen (see `tnb.test.ts`).
+- **Extraction** (`src/lib/extract/`): TNB and Air Selangor bills go through rule-based parsers, which are free, instant and exact. Other layouts, or a known layout the parser can't handle, go to Claude, which reads the PDF into a fixed schema (`src/lib/types.ts`). Line items from Claude are checked against the printed total. Names and addresses are never extracted.
+- **Tariff engines** (`src/lib/tariffs/`): the TNB domestic tariff from July 2025 (EEI bands, AFA proration, SST above 600 kWh, KWTBB), matching TNB's printed bills to the sen, and the Air Selangor domestic tariff from September 2025.
 - **Insights** (`src/lib/insights/`): deterministic rules. RM figures come from code, never from the model.
-- **Storage** (`src/lib/store.ts`): Supabase (Postgres, a private Storage bucket, and a magic-link login limited to `ALLOWED_EMAIL`) when configured. Otherwise the `.data/` folder on disk, which is git-ignored.
+- **Storage** (`src/lib/store.ts`): Supabase (Postgres, a private Storage bucket, and an email + password login limited to `ALLOWED_EMAIL`) when configured. Otherwise the `.data/` folder on disk, which is git-ignored.
 
 ## Run locally
 
@@ -31,7 +31,7 @@ npm test
 ## Deploy (Vercel + Supabase)
 
 1. Create a Supabase project and run `supabase/migrations/0001_bills.sql` in the SQL editor.
-2. In Supabase Auth → URL configuration, add `https://<your-app>.vercel.app/auth/callback` as a redirect URL.
+2. In Supabase Authentication → Users, add your user with an email and password (tick auto-confirm). Then under Authentication → Sign In / Providers, turn off new sign-ups.
 3. Import this repo into Vercel and set `ANTHROPIC_API_KEY`, `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY` and `ALLOWED_EMAIL`.
 
 ## Privacy
