@@ -1,0 +1,241 @@
+Bil Elektrik Anda
+ALAMAT POS
+AHMAD BIN CONTOH
+NO 1, JALAN CONTOH 1/1
+TAMAN CONTOH
+40000 SHAH ALAM
+SELANGOR
+TARIKH BIL
+06.08.2026
+TEMPOH BIL
+05.07.2026 - 04.08.2026
+(31 Hari)
+NO. INVOIS
+009999999999
+DEPOSIT SEKURITI
+RM300.00
+NO. AKAUN
+210000000001
+JENIS BACAAN
+Bacaan Sebenar
+TARIF
+Domestik Am
+BAYARAN BAGI TEMPOH
+05.07.2026 - 04.08.2026
+RM0.00
+Sila imbas bagi pembayaran di Kios @Kedai Tenaga
+210000000001009999999999000000000049567
+Biller Code: 5454
+Ref-1: 210000000001
+JomPAY online di Perbankan Internet dan Telefon Mudah
+Alih dengan akaun semasa, simpanan atau kad kredit
+Tunggakan Perlu Bayar RM
+236.75
+Amaun Minimum Perlu Bayar Segera RM
+236.75
+Notis Pemotongan Bekalan Elektrik
+Jelaskan tunggakan anda sebelum 16.08.2026
+Pemotongan bekalan elektrik akan dilakukan mulai 17.08.2026 hingga
+26.08.2026. Sila rujuk notis pemotongan di muka surat belakang.
+Jumlah Bil Anda (RM)
+495.67
+Sila bayar sebelum
+05 Sep 2026
+KLIK DI SINI UNTUK
+PEMBAYARAN
+Baki Terdahulu (RM)
+236.75
+Caj Semasa (RM)
+258.92
+Pelarasan Penggenapan
+0.00
+Ringkasan Bil Anda:
+Untuk maklumat terperinci, sila rujuk di muka surat sebelah
+Dengan peluasan perlindungan bil elektrik sehingga 800 kWj sebulan, pelarasan bagi Caj AFA, Caj Peruncitan dan
+Cukai Perkhidmatan bagi penggunaan Ogo 2026 akan dikreditkan dalam bil Sep 2026.
+Aras 3, Tower D, TNB Platinum, No. 3, Jln Bkt Pantai, Bangsar, 59100 Kuala Lumpur. Nombor Pendaftaran ST W10-1808-31022372
+ms 1 / 3
+e-Invois
+Caj Dan Penggunaan Bulanan Elektrik Anda Bagi Tempoh 6 Bulan
+Caj Bulanan (RM)
+BS - Bacaan Sebenar
+MAC-26
+(BS) RM205.40
+(BS) RM214.90
+APR-26
+(BS) RM247.30
+MEI-26
+(BS) RM222.10
+JUN-26
+(BS) RM236.75
+JUL-26
+(BS) RM258.92
+OGO-26
+Penggunaan (kWh)
+kWh
+0
+130
+260
+390
+520
+650
+Mac-26 Apr-26 Mei-26 Jun-26 Jul-26 Ogo-26
+548 571 622 590 604 612
+Purata Penggunaan Anda : 591 kWh
+Bil Terperinci Anda
+NO. AKAUN
+210000000001
+ALAMAT PREMIS
+NO 1, JALAN CONTOH
+1/1
+TAMAN CONTOH
+40000 SHAH ALAM
+SELANGOR
+Tempoh Bil
+Kegunaan TNB
+No. MRU : 10000000
+No. Sequence : 0049
+Bil : OPC
+Imbas atau untuk
+mendapatkan penyata terperinci
+akaun anda
+KLIK DISINI
+05.07.2026 - 04.08.2026 (31 Hari)
+Pecahan Pengiraan Bil Anda
+Jenis Caj Tanpa Cukai
+Perkhidmatan
+Dengan Cukai
+Perkhidmatan
+Jumlah
+Jumlah Penggunaan Anda kWh 600.00 12.00 612.00
+Caj Penjanaan
+Tenaga (RM0.2703/kWh) RM 162.18 3.24 165.42
+AFA (533kWh, RM0.029/kWh) mulai 01/07/26 RM 15.11 0.35 15.46
+AFA (79kWh, RM0.0335/kWh) mulai 01/08/26 RM 2.65 0.00 2.65
+Kapasiti (RM0.0455/kWh) RM 27.30 0.55 27.85
+Caj Rangkaian (RM0.1285/kWh) RM 77.10 1.54 78.64
+Caj Peruncitan RM 0.00 10.00 10.00
+Caj-Caj Lain
+Insentif Cekap Tenaga (-RM0.075/kWh) RM -45.00 -0.90 -45.90
+Caj Penggunaan Bulan Semasa RM 239.34 14.78 254.12
+Cukai Perkhidmatan (8%) RM 1.18
+KWTBB (1.6%) RM 3.62
+Caj Semasa RM 258.92
+TNB SHAH ALAM
+PSN DAMAI SEK 11
+40200 SHAH ALAM
+SELANGOR
+Kedai Tenaga Terdekat :Perlu Bantuan?
+1-300-88-5454
+Pertanyaan akaun dan bil
+15454
+Gangguan bekalan elektrik di
+rumah dan lampu jalan
+CareLine@myTNB.my
+TNB CareLine
+Tenaga_Nasional
+Aras 3, Tower D, TNB Platinum, No. 3, Jln Bkt Pantai, Bangsar, 59100 Kuala Lumpur. Nombor Pendaftaran ST W10-1808-31022372
+ms 2 / 3
+Amaun : RM452.20
+Tarikh : 12.06.2026
+MAKLUMAT BAYARAN AKHIR
+NOTIS PEMOTONGAN BEKALAN ELEKTRIK
+Berkuatkuasa pada 06.08.2026
+Jumlah RM236.75 merupakan jumlah bil elektrik yang tertunggak sepertimana dinyatakan pada
+bil bertarikh 06.07.2026 dan masih belum dijelaskan sehingga kini.
+Sila buat pembayaran minimum RM236.75 sebelum/pada 16.08.2026. Kegagalan untuk
+membayar amaun tersebut sepenuhnya di dalam tempoh yang ditetapkan akan menyebabkan
+tindakan pemotongan bekalan elektrik dilaksanakan di premis ini antara 17.08.2026 sehingga
+26.08.2026. Sila abaikan notis ini sekiranya bayaran telah dijelaskan sepenuhnya.
+Surcaj 1% akan dikenakan bagi sebarang kelewatan pembayaran bil elektrik selepas tempoh 30
+hari daripada tarikh bil dikeluarkan.
+Perkara di atas selaras dengan Peraturan Bekalan Pemegang Lesen 1990 (Pindaan 2025).
+Untuk maklumat lanjut,
+sila layari www.mytnb.com.my
+Saluran Pembayaran
+e-WALLET
+(Boost App, Touch ‘n Go eWallet)
+KIOS @ KEDAI TENAGA
+EPAY
+(Petronas, Caltex, KK Mart, dll)
+PERBANKAN INTERNET
+myTNB
+FIUU
+(7-Eleven, 99 Speed Mart &
+Caring Pharmacy)
+Cukai Perkhidmatan 8% akan
+dikenakan kepada pelanggan
+Domestik bagi:
+• Penggunaan tenaga yang melebihi
+600 kWh untuk tempoh bil 28 hari
+dan ke atas; atau
+• Jumlah keseluruhan penggunaan
+tenaga sekiranya tempoh bil adalah
+kurang daripada 28 hari
+Bayaran melalui cek sah setelah
+penjelasan cek oleh bank
+Kadar Mekanisme Pelarasan Kos
+Bahan Api Secara Automatik
+(AFA) untuk penggunaan bulanan
+melebihi 600kWh bagi tempoh bil:
+i. 01.07.2026 - 31.07.2026:
+RM0.029/kWh
+ii. 01.08.2026 - 31.08.2026:
+RM0.0335/kWh
+Bil Terperinci Anda
+NO. AKAUN
+210000000001
+ALAMAT PREMIS
+NO 1, JALAN CONTOH
+1/1
+TAMAN CONTOH
+40000 SHAH ALAM
+SELANGOR
+Tempoh Bil
+Kegunaan TNB
+No. MRU : 10000000
+No. Sequence : 0049
+Bil : OPC
+Imbas atau untuk
+mendapatkan penyata terperinci
+akaun anda
+KLIK DISINI
+05.07.2026 - 04.08.2026 (31 Hari)
+Maklumat Meter
+No. Meter Bacaan Meter
+Dahulu Semasa
+Penggunaan Unit
+M HOL0000000000000 31,208 31,820 612 kWh
+M HOL0000000000000 120 123 3 kW
+M HOL0000000000000 842 842 0 kVARh
+Aras 3, Tower D, TNB Platinum, No. 3, Jln Bkt Pantai, Bangsar, 59100 Kuala Lumpur. Nombor Pendaftaran ST W10-1808-31022372
+ms 3 / 3
+Amaun : RM452.20
+Tarikh : 12.06.2026
+MAKLUMAT BAYARAN AKHIR
+Untuk maklumat lanjut,
+sila layari www.mytnb.com.my
+Saluran Pembayaran
+e-WALLET
+(Boost App, Touch ‘n Go eWallet)
+KIOS @ KEDAI TENAGA
+EPAY
+(Petronas, Caltex, KK Mart, dll)
+PERBANKAN INTERNET
+myTNB
+FIUU
+(7-Eleven, 99 Speed Mart &
+Caring Pharmacy)
+TNB SHAH ALAM
+PSN DAMAI SEK 11
+40200 SHAH ALAM
+SELANGOR
+Kedai Tenaga Terdekat :Perlu Bantuan?
+1-300-88-5454
+Pertanyaan akaun dan bil
+15454
+Gangguan bekalan elektrik di
+rumah dan lampu jalan
+CareLine@myTNB.my
+TNB CareLine
+Tenaga_Nasional

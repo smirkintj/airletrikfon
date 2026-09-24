@@ -1,0 +1,143 @@
+@import "tailwindcss";
+
+/* Meter theme: dark first. Light mode is a separate set of steps, not an inversion. */
+:root {
+  color-scheme: dark;
+  --bg: #0d0f0e;
+  --panel: #131615;
+  --panel-2: #181c1a;
+  --line: #242926;
+  --line-2: #323834;
+  --ink: #e7e9e4;
+  --ink-2: #a4aaa2;
+  --muted: #6f766e;
+  --amber: #c98500; /* electricity, and the accent */
+  --amber-ink: #f0b43a; /* amber for text on dark */
+  --blue: #3987e5; /* water */
+  --green: #199e70; /* telco */
+  --red: #ef5b4f;
+  --red-bg: #2a1614;
+  --ok: #4fc47f;
+  --grid-dot: rgba(231, 233, 228, 0.045);
+}
+
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) {
+    color-scheme: light;
+    --bg: #f1f0ea;
+    --panel: #fbfaf6;
+    --panel-2: #f5f4ee;
+    --line: #dddbd1;
+    --line-2: #cbc8bc;
+    --ink: #151614;
+    --ink-2: #4f524c;
+    --muted: #7c7f77;
+    --amber: #a86f00;
+    --amber-ink: #8a5a00;
+    --blue: #2a78d6;
+    --green: #1baf7a;
+    --red: #c2362f;
+    --red-bg: #fbeceb;
+    --ok: #1f8a4c;
+    --grid-dot: rgba(21, 22, 20, 0.06);
+  }
+}
+
+:root[data-theme="light"] {
+  color-scheme: light;
+  --bg: #f1f0ea;
+  --panel: #fbfaf6;
+  --panel-2: #f5f4ee;
+  --line: #dddbd1;
+  --line-2: #cbc8bc;
+  --ink: #151614;
+  --ink-2: #4f524c;
+  --muted: #7c7f77;
+  --amber: #a86f00;
+  --amber-ink: #8a5a00;
+  --blue: #2a78d6;
+  --green: #1baf7a;
+  --red: #c2362f;
+  --red-bg: #fbeceb;
+  --ok: #1f8a4c;
+  --grid-dot: rgba(21, 22, 20, 0.06);
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-panel: var(--panel);
+  --color-panel-2: var(--panel-2);
+  --color-line: var(--line);
+  --color-line-2: var(--line-2);
+  --color-ink: var(--ink);
+  --color-ink-2: var(--ink-2);
+  --color-muted: var(--muted);
+  --color-amber: var(--amber);
+  --color-amber-ink: var(--amber-ink);
+  --color-blue: var(--blue);
+  --color-green: var(--green);
+  --color-red: var(--red);
+  --color-ok: var(--ok);
+  --font-sans: var(--font-plex-sans);
+  --font-mono: var(--font-plex-mono);
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  background-color: var(--bg);
+  background-image: radial-gradient(var(--grid-dot) 1px, transparent 1px);
+  background-size: 16px 16px;
+  color: var(--ink);
+}
+
+::selection {
+  background: var(--amber);
+  color: #000;
+}
+
+:focus-visible {
+  outline: 2px solid var(--amber-ink);
+  outline-offset: 2px;
+}
+
+/* Above-the-line usage: texture, so it never relies on a second hue. */
+.hatch {
+  background-image: repeating-linear-gradient(
+    135deg,
+    var(--amber) 0 3px,
+    transparent 3px 6px
+  );
+  box-shadow: inset 0 0 0 1px var(--amber);
+}
+
+.label {
+  font-family: var(--font-plex-mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.num {
+  font-family: var(--font-plex-mono);
+  font-variant-numeric: tabular-nums;
+}
+
+@keyframes pulse-dim {
+  50% {
+    opacity: 0.45;
+  }
+}
+.skeleton {
+  background: var(--panel-2);
+  animation: pulse-dim 1.4s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .skeleton {
+    animation: none;
+  }
+}
