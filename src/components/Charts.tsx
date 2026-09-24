@@ -1,6 +1,16 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+
+/** True once the chart has mounted, so bars can grow from 0 into their real height. */
+function useGrowIn() {
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => {
+    const id = requestAnimationFrame(() => setMounted(true));
+    return () => cancelAnimationFrame(id);
+  }, []);
+  return mounted;
+}
 
 const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 export const monthLabel = (m: string) => `${MONTHS[Number(m.slice(5, 7)) - 1]} ${m.slice(2, 4)}`;
@@ -17,9 +27,10 @@ type Point = { month: string; usage: number | null; amount: number | null };
  * Monthly usage bars in plain CSS, so they reflow at any width. Tap, hover or arrow-key
  * across the bars; the readout line shows the selected month.
  */
-export function UsageChart({ data, unit, threshold }: { data: Point[]; unit: string; threshold?: number }) {
+export function UsageChart({ data, unit, threshold, spikeMonths }: { data: Point[]; unit: string; threshold?: number; spikeMonths?: Set<string> }) {
   const rows = data.filter((d) => d.usage != null) as (Point & { usage: number })[];
   const [sel, setSel] = useState(rows.length - 1);
+  const grown = useGrowIn();
   if (!rows.length) return null;
   const max = niceMax(Math.max(...rows.map((r) => r.usage), threshold ?? 0));
   const h = (v: number) => `${(v / max) * 100}%`;
@@ -34,6 +45,7 @@ export function UsageChart({ data, unit, threshold }: { data: Point[]; unit: str
         </span>
         {cur.amount != null && <span className="text-ink-2">{rm(cur.amount)}</span>}
         {threshold && cur.usage > threshold && <span className="text-amber-ink">+{cur.usage - threshold} over line</span>}
+        {spikeMonths?.has(cur.month) && <span className="text-red">Spike vs your usual months</span>}
       </figcaption>
 
       <div className="flex gap-2">
@@ -66,13 +78,14 @@ export function UsageChart({ data, unit, threshold }: { data: Point[]; unit: str
             {rows.map((r, i) => {
               const under = threshold ? Math.min(r.usage, threshold) : r.usage;
               const over = threshold && r.usage > threshold ? r.usage - threshold : 0;
+              const isSpike = spikeMonths?.has(r.month);
               return (
                 <button
                   key={r.month}
                   type="button"
                   role="option"
                   aria-selected={i === sel}
-                  aria-label={`${monthLabel(r.month)}: ${r.usage} ${unit}`}
+                  aria-label={`${monthLabel(r.month)}: ${r.usage} ${unit}${isSpike ? " — spike" : ""}`}
                   tabIndex={-1}
                   onMouseEnter={() => setSel(i)}
                   onFocus={() => setSel(i)}
@@ -80,10 +93,17 @@ export function UsageChart({ data, unit, threshold }: { data: Point[]; unit: str
                   className="group relative flex h-full max-w-12 flex-1 flex-col justify-end"
                 >
                   <span className={`absolute inset-x-[-15%] inset-y-0 ${i === sel ? "bg-ink/5" : ""}`} aria-hidden />
-                  {over > 0 && <span className="hatch relative block rounded-t-[3px]" style={{ height: h(over) }} />}
+                  {over > 0 && (
+                    <span
+                      className="hatch relative block rounded-t-[3px] transition-[height] duration-700 ease-out"
+                      style={{ height: grown ? h(over) : "0%" }}
+                    />
+                  )}
                   <span
-                    className={`relative block bg-amber transition-opacity ${over ? "" : "rounded-t-[3px]"} ${i === sel ? "" : "opacity-80"}`}
-                    style={{ height: h(under) }}
+                    className={`relative block transition-[height,background-color] duration-700 ease-out ${over ? "" : "rounded-t-[3px]"} ${
+                      isSpike ? "bg-red" : "bg-amber"
+                    } ${i === sel ? "" : "opacity-80"} ${isSpike ? "animate-pulse" : ""}`}
+                    style={{ height: grown ? h(under) : "0%" }}
                   />
                 </button>
               );
@@ -98,14 +118,23 @@ export function UsageChart({ data, unit, threshold }: { data: Point[]; unit: str
           </span>
         ))}
       </div>
-      {threshold && (
-        <p className="num mt-3 flex items-center gap-4 text-[11px] text-muted">
-          <span className="flex items-center gap-1.5">
-            <span className="inline-block h-2.5 w-2.5 bg-amber" /> up to {threshold}
-          </span>
-          <span className="flex items-center gap-1.5">
-            <span className="hatch inline-block h-2.5 w-2.5" /> above {threshold}
-          </span>
+      {Boolean(threshold || spikeMonths?.size) && (
+        <p className="num mt-3 flex flex-wrap items-center gap-4 text-[11px] text-muted">
+          {threshold && (
+            <>
+              <span className="flex items-center gap-1.5">
+                <span className="inline-block h-2.5 w-2.5 bg-amber" /> up to {threshold}
+              </span>
+              <span className="flex items-center gap-1.5">
+                <span className="hatch inline-block h-2.5 w-2.5" /> above {threshold}
+              </span>
+            </>
+          )}
+          {spikeMonths?.size ? (
+            <span className="flex items-center gap-1.5">
+              <span className="inline-block h-2.5 w-2.5 bg-red" /> unusual spike
+            </span>
+          ) : null}
         </p>
       )}
       <DataTable headers={["Month", `Usage (${unit})`, "Charges"]} rows={rows.map((r) => [monthLabel(r.month), String(r.usage), r.amount != null ? rm(r.amount) : "–"])} />
@@ -126,6 +155,7 @@ export function SpendChart({ data }: { data: SpendRow[] }) {
   const present = CATEGORIES.filter((c) => data.some((d) => d[c.key] != null));
   const totals = data.map((d) => present.reduce((s, c) => s + (d[c.key] ?? 0), 0));
   const [sel, setSel] = useState(data.length - 1);
+  const grown = useGrowIn();
   if (!data.length) return null;
   const max = niceMax(Math.max(...totals));
   const cur = data[Math.min(sel, data.length - 1)];
@@ -150,8 +180,8 @@ export function SpendChart({ data }: { data: SpendRow[] }) {
             onMouseEnter={() => setSel(i)}
             onFocus={() => setSel(i)}
             onClick={() => setSel(i)}
-            className={`flex max-w-12 flex-1 flex-col-reverse gap-[2px] ${i === sel ? "" : "opacity-75"}`}
-            style={{ height: `${(totals[i] / max) * 100}%` }}
+            className={`flex max-w-12 flex-1 flex-col-reverse gap-[2px] transition-[height] duration-700 ease-out ${i === sel ? "" : "opacity-75"}`}
+            style={{ height: grown ? `${(totals[i] / max) * 100}%` : "0%" }}
           >
             {present.map((c, j) =>
               d[c.key] ? (

@@ -17,6 +17,7 @@
   --green: #199e70; /* telco */
   --red: #ef5b4f;
   --red-bg: #2a1614;
+  --amber-bg: #241c0a;
   --ok: #4fc47f;
   --grid-dot: rgba(231, 233, 228, 0.045);
 }
@@ -38,6 +39,7 @@
     --green: #1baf7a;
     --red: #c2362f;
     --red-bg: #fbeceb;
+    --amber-bg: #f7ecd6;
     --ok: #1f8a4c;
     --grid-dot: rgba(21, 22, 20, 0.06);
   }
@@ -59,6 +61,7 @@
   --green: #1baf7a;
   --red: #c2362f;
   --red-bg: #fbeceb;
+  --amber-bg: #f7ecd6;
   --ok: #1f8a4c;
   --grid-dot: rgba(21, 22, 20, 0.06);
 }
@@ -139,5 +142,19 @@ body {
 @media (prefers-reduced-motion: reduce) {
   .skeleton {
     animation: none;
+  }
+}
+
+/* Panels settle in on load, staggered by --rise-i (0, 1, 2, ...) if set. */
+@keyframes rise-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .rise-in {
+    animation: rise-in 480ms cubic-bezier(0.16, 1, 0.3, 1) backwards;
+    animation-delay: calc(var(--rise-i, 0) * 70ms);
   }
 }

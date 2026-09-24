@@ -8,7 +8,7 @@ const sans = IBM_Plex_Sans({ variable: "--font-plex-sans", subsets: ["latin"], w
 const mono = IBM_Plex_Mono({ variable: "--font-plex-mono", subsets: ["latin"], weight: ["400", "500", "600"] });
 
 export const metadata: Metadata = {
-  title: "Billsight",
+  title: "apiairletrik",
   description: "Household bills, read and totted up.",
 };
 

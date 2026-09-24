@@ -4,11 +4,27 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 
-type Item = { key: string; file: File; state: "queued" | "reading" | "done" | "duplicate" | "error"; id?: string; error?: string; startedAt?: number };
+type Item = {
+  key: string;
+  file: File;
+  state: "queued" | "reading" | "done" | "duplicate" | "error";
+  id?: string;
+  error?: string;
+  startedAt?: number;
+  mismatch?: string;
+};
+
+const CATEGORIES = [
+  { key: "electricity", label: "Electricity", hint: "TNB PDF" },
+  { key: "water", label: "Water", hint: "Air Selangor PDF" },
+  { key: "telco", label: "Phone", hint: "Maxis or CelcomDigi PDF" },
+] as const;
+type CategoryKey = (typeof CATEGORIES)[number]["key"];
 
 export default function UploadPage() {
   const router = useRouter();
   const input = useRef<HTMLInputElement>(null);
+  const [category, setCategory] = useState<CategoryKey>("electricity");
   const [items, setItems] = useState<Item[]>([]);
   const [over, setOver] = useState(false);
   const [now, setNow] = useState(0);
@@ -36,10 +52,14 @@ export default function UploadPage() {
       update(it.key, { state: "reading", startedAt: Date.now() });
       const form = new FormData();
       form.set("file", it.file);
+      form.set("category", category);
       try {
         const res = await fetch("/api/bills", { method: "POST", body: form });
         const body = await res.json().catch(() => ({ error: "Upload failed" }));
-        update(it.key, res.ok ? { state: body.duplicate ? "duplicate" : "done", id: body.id } : { state: "error", error: body.error });
+        update(
+          it.key,
+          res.ok ? { state: body.duplicate ? "duplicate" : "done", id: body.id, mismatch: body.mismatch } : { state: "error", error: body.error },
+        );
       } catch {
         update(it.key, { state: "error", error: "Network error, try again" });
       }
@@ -52,7 +72,28 @@ export default function UploadPage() {
       <div>
         <p className="label">02 · Add bill</p>
         <h1 className="mt-1 text-2xl font-medium">Drop in your e-bills</h1>
-        <p className="mt-1 text-sm text-ink-2">TNB, Air Selangor, Maxis or CelcomDigi PDFs. Several at once is fine.</p>
+        <p className="mt-1 text-sm text-ink-2">
+          Pick what kind of bill this is, then drop in the PDF. Several at once is fine, as long as they&apos;re all the same kind.
+        </p>
+      </div>
+
+      <div className="grid grid-cols-3 gap-2">
+        {CATEGORIES.map((c) => (
+          <button
+            key={c.key}
+            type="button"
+            onClick={() => setCategory(c.key)}
+            aria-pressed={category === c.key}
+            className={`border px-3 py-2.5 text-left transition-colors ${
+              category === c.key ? "border-amber bg-panel-2" : "border-line bg-panel hover:border-ink-2"
+            }`}
+          >
+            <span className={`num block text-xs font-medium tracking-wider uppercase ${category === c.key ? "text-amber-ink" : "text-ink"}`}>
+              {c.label}
+            </span>
+            <span className="label mt-0.5 block">{c.hint}</span>
+          </button>
+        ))}
       </div>
 
       <button
@@ -98,17 +139,30 @@ export default function UploadPage() {
       {items.length > 0 && (
         <ul className="divide-y divide-line border border-line bg-panel" aria-live="polite">
           {items.map((i) => (
-            <li key={i.key} className="flex items-center gap-3 px-4 py-3 text-sm">
-              <Status item={i} />
-              <span className="min-w-0 flex-1 truncate">{i.file.name}</span>
-              <span className="num shrink-0 text-xs text-muted">
-                {i.state === "reading" && i.startedAt ? `${Math.max(0, Math.floor((now - i.startedAt) / 1000))}s` : `${Math.max(1, Math.round(i.file.size / 1024))} KB`}
-              </span>
-              {(i.state === "done" || i.state === "duplicate") && i.id && (
-                <Link href={`/bills/${i.id}`} className="num shrink-0 text-xs tracking-wider text-amber-ink uppercase">
-                  Open →
-                </Link>
-              )}
+            <li key={i.key} className="flex flex-col gap-1 px-4 py-3 text-sm">
+              <div className="flex items-center gap-3">
+                <Status item={i} />
+                <span className="min-w-0 flex-1 truncate">{i.file.name}</span>
+                <span className="num shrink-0 text-xs text-muted">
+                  {i.state === "reading" && i.startedAt ? `${Math.max(0, Math.floor((now - i.startedAt) / 1000))}s` : `${Math.max(1, Math.round(i.file.size / 1024))} KB`}
+                </span>
+                {(i.state === "done" || i.state === "duplicate") && i.id && (
+                  <>
+                    <a
+                      href={`/api/bills/${i.id}/pdf`}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="num shrink-0 text-xs tracking-wider text-ink-2 uppercase hover:text-ink"
+                    >
+                      PDF
+                    </a>
+                    <Link href={`/bills/${i.id}`} className="num shrink-0 text-xs tracking-wider text-amber-ink uppercase">
+                      Open →
+                    </Link>
+                  </>
+                )}
+              </div>
+              {i.mismatch && <p className="text-xs text-ink-2">{i.mismatch}</p>}
             </li>
           ))}
         </ul>

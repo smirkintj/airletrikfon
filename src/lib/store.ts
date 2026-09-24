@@ -2,7 +2,8 @@ import "server-only";
 import { randomUUID } from "node:crypto";
 import { mkdir, readFile, rm, writeFile } from "node:fs/promises";
 import path from "node:path";
-import { DeleteObjectCommand, PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
+import { buffer as streamToBuffer } from "node:stream/consumers";
+import { DeleteObjectCommand, GetObjectCommand, PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
 import { attachDatabasePool } from "@vercel/functions";
 import { Pool } from "pg";
 import { authEnabled, currentUser } from "./auth";
@@ -18,6 +19,8 @@ export interface Store {
   get(id: string): Promise<Bill | null>;
   add(bill: ExtractedBill, extractedBy: Bill["extractedBy"], pdf: Buffer): Promise<Bill>;
   remove(id: string): Promise<void>;
+  /** The original uploaded PDF for a bill, or null if the bill (or its file) doesn't exist. */
+  getPdf(id: string): Promise<Buffer | null>;
 }
 
 export class Unauthorized extends Error {}
@@ -64,6 +67,15 @@ const localStore: Store = {
     const bill = all.find((b) => b.id === id);
     if (bill?.pdfPath) await rm(path.join(DATA, bill.pdfPath), { force: true });
     await writeFile(INDEX, JSON.stringify(all.filter((b) => b.id !== id), null, 2));
+  },
+  async getPdf(id) {
+    const bill = await this.get(id);
+    if (!bill?.pdfPath) return null;
+    try {
+      return await readFile(path.join(DATA, bill.pdfPath));
+    } catch {
+      return null;
+    }
   },
 };
 
@@ -135,6 +147,14 @@ async function neonStore(): Promise<Store> {
       const { rows } = await pool.query<Row>("delete from bills where id = $1 and user_id = $2 returning *", [id, user.id]);
       const bill = rows[0];
       if (bill?.pdf_key) await storage().send(new DeleteObjectCommand({ Bucket: bucketFor(bill.data.provider), Key: bill.pdf_key }));
+    },
+    async getPdf(id) {
+      const { rows } = await pool.query<Row>("select * from bills where id = $1 and user_id = $2", [id, user.id]);
+      const bill = rows[0];
+      if (!bill?.pdf_key) return null;
+      const { Body } = await storage().send(new GetObjectCommand({ Bucket: bucketFor(bill.data.provider), Key: bill.pdf_key }));
+      if (!Body) return null;
+      return streamToBuffer(Body as NodeJS.ReadableStream);
     },
   };
 }

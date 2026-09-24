@@ -19,7 +19,7 @@ export function Nav({ signOut = false }: { signOut?: boolean }) {
         <div className="mx-auto flex h-12 max-w-6xl items-center justify-between px-4 sm:px-6">
           <Link href="/" className="num flex items-center gap-2 text-sm font-semibold tracking-[0.18em]">
             <span className="inline-block h-2 w-2 rounded-full bg-amber" aria-hidden />
-            BILLSIGHT
+            APIAIRLETRIK
           </Link>
           <nav className="hidden gap-1 md:flex" aria-label="Main">
             {ITEMS.map((i) => (
