@@ -2,12 +2,16 @@ import "server-only";
 import { randomUUID } from "node:crypto";
 import { mkdir, readFile, rm, writeFile } from "node:fs/promises";
 import path from "node:path";
-import { isAllowedEmail, supabaseEnabled, supabaseServer } from "./supabase";
-import type { Bill, ExtractedBill } from "./types";
+import { DeleteObjectCommand, PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
+import { attachDatabasePool } from "@vercel/functions";
+import { Pool } from "pg";
+import { authEnabled, currentUser } from "./auth";
+import { PROVIDERS, type Bill, type ExtractedBill } from "./types";
 
 /**
- * Bills live in Supabase when it's configured, otherwise in `.data/` on local disk
- * (git-ignored). Local mode has no login, so it refuses to run on Vercel.
+ * Bills live in Neon when it's configured: rows in Postgres, original PDFs in the
+ * category's private bucket. Otherwise they live in `.data/` on local disk (git-ignored).
+ * Local mode has no login, so it refuses to run on Vercel.
  */
 export interface Store {
   list(): Promise<Bill[]>;
@@ -17,12 +21,18 @@ export interface Store {
 }
 
 export class Unauthorized extends Error {}
+export class NotConfigured extends Error {}
 
 export async function getStore(): Promise<Store> {
-  if (supabaseEnabled()) return supabaseStore();
-  if (process.env.VERCEL) throw new Error("Supabase isn't configured. Refusing to serve bills without a login.");
+  if (process.env.DATABASE_URL) {
+    if (!authEnabled()) throw new NotConfigured("DATABASE_URL is set but Neon Auth isn't configured. Refusing to serve bills without a login.");
+    return neonStore();
+  }
+  if (process.env.VERCEL) throw new NotConfigured("Neon isn't configured. Refusing to serve bills without a login.");
   return localStore;
 }
+
+// ─── Local ──────────────────────────────────────────────────────────────────────────────
 
 const DATA = path.join(process.cwd(), ".data");
 const INDEX = path.join(DATA, "bills.json");
@@ -57,49 +67,74 @@ const localStore: Store = {
   },
 };
 
-async function supabaseStore(): Promise<Store> {
-  const sb = await supabaseServer();
-  const { data } = await sb.auth.getUser();
-  if (!data.user || !isAllowedEmail(data.user.email)) throw new Unauthorized();
-  const userId = data.user.id;
+// ─── Neon ───────────────────────────────────────────────────────────────────────────────
 
-  const toBill = (row: { id: string; data: ExtractedBill; extracted_by: Bill["extractedBy"]; pdf_path: string | null; created_at: string }): Bill => ({
-    ...row.data,
-    id: row.id,
-    extractedBy: row.extracted_by,
-    pdfPath: row.pdf_path,
-    createdAt: row.created_at,
-  });
+const BUCKETS = { electricity: "electricbill", water: "waterbill", telco: "phonebill", other: "phonebill" } as const;
+const bucketFor = (provider: Bill["provider"]) => BUCKETS[PROVIDERS[provider].category];
+
+let pool: Pool | null = null;
+let s3: S3Client | null = null;
+let schema: Promise<unknown> | null = null;
+
+function db() {
+  if (!pool) {
+    pool = new Pool({ connectionString: process.env.DATABASE_URL });
+    attachDatabasePool(pool);
+  }
+  // One small table, so it's created on first use instead of via a migration tool.
+  schema ??= pool.query(`
+    create table if not exists bills (
+      id uuid primary key,
+      user_id text not null,
+      provider text not null,
+      account_no text not null,
+      bill_date date not null,
+      data jsonb not null,
+      extracted_by text not null,
+      pdf_key text,
+      created_at timestamptz not null default now()
+    );
+    create index if not exists bills_user_date on bills (user_id, bill_date);
+  `);
+  return { pool, ready: schema };
+}
+
+// Credentials, endpoint and region come from the AWS_* variables Neon provides.
+const storage = () => (s3 ??= new S3Client({ forcePathStyle: true }));
+
+type Row = { id: string; data: ExtractedBill; extracted_by: Bill["extractedBy"]; pdf_key: string | null; created_at: Date };
+const toBill = (r: Row): Bill => ({ ...r.data, id: r.id, extractedBy: r.extracted_by, pdfPath: r.pdf_key, createdAt: r.created_at.toISOString() });
+
+async function neonStore(): Promise<Store> {
+  const user = await currentUser();
+  if (!user) throw new Unauthorized();
+  const { pool, ready } = db();
+  await ready;
 
   return {
     async list() {
-      const { data, error } = await sb.from("bills").select("*").order("bill_date");
-      if (error) throw error;
-      return data.map(toBill);
+      const { rows } = await pool.query<Row>("select * from bills where user_id = $1 order by bill_date", [user.id]);
+      return rows.map(toBill);
     },
     async get(id) {
-      const { data, error } = await sb.from("bills").select("*").eq("id", id).maybeSingle();
-      if (error) throw error;
-      return data ? toBill(data) : null;
+      const { rows } = await pool.query<Row>("select * from bills where id = $1 and user_id = $2", [id, user.id]);
+      return rows[0] ? toBill(rows[0]) : null;
     },
     async add(extracted, extractedBy, pdf) {
       const id = randomUUID();
-      const pdfPath = `${userId}/${id}.pdf`;
-      const up = await sb.storage.from("bills").upload(pdfPath, pdf, { contentType: "application/pdf" });
-      if (up.error) throw up.error;
-      const { data, error } = await sb
-        .from("bills")
-        .insert({ id, user_id: userId, data: extracted, extracted_by: extractedBy, pdf_path: pdfPath, provider: extracted.provider, account_no: extracted.accountNo, bill_date: extracted.billDate })
-        .select()
-        .single();
-      if (error) throw error;
-      return toBill(data);
+      const key = `${user.id}/${id}.pdf`;
+      await storage().send(new PutObjectCommand({ Bucket: bucketFor(extracted.provider), Key: key, Body: pdf, ContentType: "application/pdf" }));
+      const { rows } = await pool.query<Row>(
+        `insert into bills (id, user_id, provider, account_no, bill_date, data, extracted_by, pdf_key)
+         values ($1, $2, $3, $4, $5, $6, $7, $8) returning *`,
+        [id, user.id, extracted.provider, extracted.accountNo, extracted.billDate, JSON.stringify(extracted), extractedBy, key],
+      );
+      return toBill(rows[0]);
     },
     async remove(id) {
-      const { data } = await sb.from("bills").select("pdf_path").eq("id", id).maybeSingle();
-      if (data?.pdf_path) await sb.storage.from("bills").remove([data.pdf_path]);
-      const { error } = await sb.from("bills").delete().eq("id", id);
-      if (error) throw error;
+      const { rows } = await pool.query<Row>("delete from bills where id = $1 and user_id = $2 returning *", [id, user.id]);
+      const bill = rows[0];
+      if (bill?.pdf_key) await storage().send(new DeleteObjectCommand({ Bucket: bucketFor(bill.data.provider), Key: bill.pdf_key }));
     },
   };
 }

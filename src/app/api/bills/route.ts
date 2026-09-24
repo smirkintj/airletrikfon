@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { ExtractionRefused } from "@/lib/extract/claude";
 import { extractBill, NeedsApiKey } from "@/lib/extract";
-import { getStore, Unauthorized } from "@/lib/store";
+import { getStore, NotConfigured, Unauthorized } from "@/lib/store";
 
 const MAX_BYTES = 10 * 1024 * 1024;
 
@@ -25,6 +25,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ id: saved.id });
   } catch (e) {
     if (e instanceof Unauthorized) return error("Please sign in again.", 401);
+    if (e instanceof NotConfigured) return error("The app isn't set up yet.", 503);
     if (e instanceof NeedsApiKey || e instanceof ExtractionRefused) return error(e.message, 422);
     console.error(e);
     return error(e instanceof Error && / parser: /.test(e.message) ? e.message : "Couldn't read that bill.", 500);

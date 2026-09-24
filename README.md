@@ -17,7 +17,7 @@ PDF ──► extract ──────────────► bill JSON �
 - **Extraction** (`src/lib/extract/`): TNB and Air Selangor bills go through rule-based parsers, which are free, instant and exact. Other layouts, or a known layout the parser can't handle, go to Claude, which reads the PDF into a fixed schema (`src/lib/types.ts`). Line items from Claude are checked against the printed total. Names and addresses are never extracted.
 - **Tariff engines** (`src/lib/tariffs/`): the TNB domestic tariff from July 2025 (EEI bands, AFA proration, SST above 600 kWh, KWTBB), matching TNB's printed bills to the sen, and the Air Selangor domestic tariff from September 2025.
 - **Insights** (`src/lib/insights/`): deterministic rules. RM figures come from code, never from the model.
-- **Storage** (`src/lib/store.ts`): Supabase (Postgres, a private Storage bucket, and an email + password login limited to `ALLOWED_EMAIL`) when configured. Otherwise the `.data/` folder on disk, which is git-ignored.
+- **Storage and login** (`src/lib/store.ts`, `src/lib/auth.ts`, `neon.ts`): on Neon, bills are rows in Postgres, original PDFs go to private buckets (`electricbill`, `waterbill`, `phonebill`), and login is Neon Auth (email + password) limited to `ALLOWED_EMAIL`. Without Neon settings, bills are kept in the git-ignored `.data/` folder with no login, for local use only.
 
 ## Run locally
 
@@ -28,11 +28,16 @@ npm run dev                  # http://localhost:3000
 npm test
 ```
 
-## Deploy (Vercel + Supabase)
+## Deploy (Vercel + Neon)
 
-1. Create a Supabase project and run `supabase/migrations/0001_bills.sql` in the SQL editor.
-2. In Supabase Authentication → Users, add your user with an email and password (tick auto-confirm). Then under Authentication → Sign In / Providers, turn off new sign-ups.
-3. Import this repo into Vercel and set `ANTHROPIC_API_KEY`, `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY` and `ALLOWED_EMAIL`.
+1. Provision Neon (needs a Neon login or `NEON_API_KEY`). This creates the auth service and buckets, and writes their settings to `.env.local`:
+   ```bash
+   neon link --project-id <project-id> --branch production -y
+   neon deploy
+   ```
+2. In Vercel → Project → Settings → Environment Variables, add every value from `.env.local`: `DATABASE_URL`, `NEON_AUTH_BASE_URL`, the four `AWS_*` values, plus `NEON_AUTH_COOKIE_SECRET` (generate with `openssl rand -base64 32`), `ALLOWED_EMAIL` and `ANTHROPIC_API_KEY`. Redeploy.
+3. Allow the site in Neon Auth: `neon neon-auth domain add https://<your-app>.vercel.app`
+4. Open the site, choose "First time here? Create your account" with the allowed email, then sign in.
 
 ## Privacy
 
