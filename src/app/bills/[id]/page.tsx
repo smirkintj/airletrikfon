@@ -35,7 +35,19 @@ export default async function BillPage({ params }: PageProps<"/bills/[id]">) {
           {PROVIDERS[bill.provider].name} · {maskAccount(bill.accountNo)}
           {bill.tariff ? ` · ${bill.tariff}` : ""}
         </p>
-        <h1 className="mt-1 text-2xl font-medium sm:text-3xl">Bill of {fmtDate(bill.billDate)}</h1>
+        <div className="mt-1 flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
+          <h1 className="text-2xl font-medium sm:text-3xl">Bill of {fmtDate(bill.billDate)}</h1>
+          {bill.pdfPath && (
+            <a
+              href={`/api/bills/${bill.id}/pdf`}
+              target="_blank"
+              rel="noreferrer"
+              className="num text-xs tracking-wider text-amber-ink uppercase hover:underline"
+            >
+              View original PDF →
+            </a>
+          )}
+        </div>
         {bill.periodStart && bill.periodEnd && (
           <p className="num mt-1 text-sm text-ink-2">
             {fmtDate(bill.periodStart)} → {fmtDate(bill.periodEnd)}
