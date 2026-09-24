@@ -34,29 +34,37 @@ export default async function Overview() {
             />
           </div>
         </Panel>
-        <Panel title="Findings" meta={`${insights.length} item${insights.length === 1 ? "" : "s"}`}>
+        <Panel title="Findings" meta={`${insights.length} item${insights.length === 1 ? "" : "s"}`} riseIndex={1}>
           <Findings insights={insights} />
         </Panel>
       </div>
 
       {accounts.length > 1 && spend.length > 1 && (
-        <Panel title="Monthly spend" meta="Charges per month, excl. arrears">
+        <Panel title="Monthly spend" meta="Charges per month, excl. arrears" riseIndex={2}>
           <SpendChart data={spend} />
         </Panel>
       )}
 
-      {accounts.map((a) => (
-        <AccountPanel key={a.key} account={a} />
+      {accounts.map((a, i) => (
+        <AccountPanel key={a.key} account={a} riseIndex={3 + i} />
       ))}
     </div>
   );
 }
 
-function AccountPanel({ account: a }: { account: Account }) {
+function AccountPanel({ account: a, riseIndex }: { account: Account; riseIndex: number }) {
   const b = a.bills[a.bills.length - 1];
   const unit = b.usage?.unit;
   // The line that matters: TNB's 600 kWh cliff, Air Selangor's top-rate tier.
   const line = a.provider === "tnb" ? TNB.protectionKwh : a.provider === "air_selangor" ? 35 : undefined;
+  // Months flagged as an unusual spike, so the usage chart can call them out directly —
+  // the whole point of tracking bills here is spotting what caused one.
+  const spikeMonths = new Set(
+    insightsFor(a)
+      .filter((i) => i.id.endsWith(":spike"))
+      .map((i) => a.bills.find((bill) => bill.id === i.billId)?.billDate.slice(0, 7))
+      .filter((m): m is string => Boolean(m)),
+  );
   return (
     <Panel
       title={
@@ -65,6 +73,7 @@ function AccountPanel({ account: a }: { account: Account }) {
         </>
       }
       meta={`Last bill ${fmtDate(b.billDate)}`}
+      riseIndex={riseIndex}
     >
       <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
         {b.usage && <Readout label="Usage" value={String(b.usage.value)} unit={b.usage.unit} />}
@@ -85,7 +94,7 @@ function AccountPanel({ account: a }: { account: Account }) {
       {unit && a.series.length > 1 && (
         <div className="mt-6">
           <p className="label mb-2">Monthly usage</p>
-          <UsageChart data={a.series} unit={unit} threshold={line} />
+          <UsageChart data={a.series} unit={unit} threshold={line} spikeMonths={spikeMonths} />
         </div>
       )}
 
