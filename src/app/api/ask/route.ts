@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { askAboutBills } from "@/lib/ask";
 import { hasClaude } from "@/lib/extract";
-import { getStore, Unauthorized } from "@/lib/store";
+import { getStore, NotConfigured, Unauthorized } from "@/lib/store";
 
 export async function POST(request: Request) {
   try {
@@ -16,6 +16,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ answer: await askAboutBills(question.trim(), await store.list()) });
   } catch (e) {
     if (e instanceof Unauthorized) return NextResponse.json({ error: "Please sign in again." }, { status: 401 });
+    if (e instanceof NotConfigured) return NextResponse.json({ error: "The app isn't set up yet." }, { status: 503 });
     console.error(e);
     return NextResponse.json({ error: "Something went wrong answering that." }, { status: 500 });
   }

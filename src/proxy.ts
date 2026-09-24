@@ -1,36 +1,15 @@
-import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
+import { auth, authEnabled } from "@/lib/auth";
 
 /**
- * With Supabase configured: refresh the session cookie and send signed-out visitors to
- * /login. Without it (local mode) every request passes through.
+ * With Neon Auth configured, pages need a session (and refresh it); signed-out visitors go
+ * to /login. API routes check the session themselves. Local mode passes everything through.
  */
 export async function proxy(request: NextRequest) {
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-  if (!url || !key) return NextResponse.next();
-
-  let response = NextResponse.next({ request });
-  const supabase = createServerClient(url, key, {
-    cookies: {
-      getAll: () => request.cookies.getAll(),
-      setAll: (list, headers) => {
-        list.forEach(({ name, value }) => request.cookies.set(name, value));
-        response = NextResponse.next({ request });
-        list.forEach(({ name, value, options }) => response.cookies.set(name, value, options));
-        Object.entries(headers).forEach(([k, v]) => response.headers.set(k, v));
-      },
-    },
-  });
-
-  const { data } = await supabase.auth.getUser();
-  const path = request.nextUrl.pathname;
-  if (!data.user && !path.startsWith("/login")) {
-    return NextResponse.redirect(new URL("/login", request.url));
-  }
-  return response;
+  if (!authEnabled()) return NextResponse.next();
+  return auth().middleware({ loginUrl: "/login" })(request);
 }
 
 export const config = {
-  matcher: ["/((?!_next/static|_next/image|favicon.ico).*)"],
+  matcher: ["/", "/upload", "/ask", "/bills/:path*"],
 };

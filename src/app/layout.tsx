@@ -1,7 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { IBM_Plex_Mono, IBM_Plex_Sans } from "next/font/google";
 import { Nav } from "@/components/Nav";
-import { supabaseEnabled } from "@/lib/supabase";
+import { authEnabled } from "@/lib/auth";
 import "./globals.css";
 
 const sans = IBM_Plex_Sans({ variable: "--font-plex-sans", subsets: ["latin"], weight: ["400", "500", "600"] });
@@ -26,7 +26,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="en" className={`${sans.variable} ${mono.variable} antialiased`}>
       <body className="min-h-dvh font-sans text-[15px] leading-relaxed">
-        <Nav signOut={supabaseEnabled()} />
+        <Nav signOut={authEnabled()} />
         <main className="mx-auto max-w-6xl px-4 pt-5 pb-28 sm:px-6 md:pb-12">{children}</main>
       </body>
     </html>
